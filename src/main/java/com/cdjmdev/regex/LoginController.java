@@ -15,7 +15,7 @@ public class LoginController {
 
     public static class LoginResult {
         public String authtoken;
-        public int status;
+        public int status = 200;
         public String message;
     }
 

@@ -64,18 +64,7 @@ public class LoginService {
 				factory.getUserDAO().save(user);
 			}
 
-			Authtoken token;
-
-			try {
-				//if authtoken exists then just update the expiration time
-				token = factory.getAuthtokenDAO().getByUserID(user.id);
-
-				token.expires = Utilities.getFutureTimestamp();
-
-				factory.getAuthtokenDAO().save(token);
-			} catch(Exception e) {
-				token = factory.getAuthtokenDAO().createNew(user);
-			}
+			Authtoken token = getToken(user);
 
 			result.authtoken = token.id;
 		} else {
@@ -94,6 +83,15 @@ public class LoginService {
 		if(!match)
 			throw new CredentialsIncorrectException("Credentials Incorrect");
 
+		Authtoken token = getToken(user);
+
+		LoginController.LoginResult result = new LoginController.LoginResult();
+		result.authtoken = token.id;
+
+		return result;
+	}
+
+	private Authtoken getToken(User user) {
 		Authtoken token;
 
 		try {
@@ -107,9 +105,6 @@ public class LoginService {
 			token = factory.getAuthtokenDAO().createNew(user);
 		}
 
-		LoginController.LoginResult result = new LoginController.LoginResult();
-		result.authtoken = token.id;
-
-		return result;
+		return token;
 	}
 }
