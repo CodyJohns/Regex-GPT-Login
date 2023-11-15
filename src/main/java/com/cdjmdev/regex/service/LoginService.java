@@ -61,6 +61,7 @@ public class LoginService {
 				user = factory.getUserDAO().getByGoogleID(userID);
 			} catch(Exception e) {
 				user = new User(userID, "", Utilities.generateCode(16), email);
+				factory.getUserDAO().save(user);
 			}
 
 			Authtoken token;
