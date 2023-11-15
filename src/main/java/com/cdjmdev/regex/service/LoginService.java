@@ -55,14 +55,7 @@ public class LoginService {
 			String userID = idToken.getPayload().getSubject();
 			String email = idToken.getPayload().getEmail();
 
-			User user;
-
-			try{
-				user = factory.getUserDAO().getByGoogleID(userID);
-			} catch(Exception e) {
-				user = new User(userID, "", Utilities.generateCode(16), email);
-				factory.getUserDAO().save(user);
-			}
+			User user = getUser(userID, email);
 
 			Authtoken token = getToken(user);
 
@@ -89,6 +82,19 @@ public class LoginService {
 		result.authtoken = token.id;
 
 		return result;
+	}
+
+	private User getUser(String userID, String email) {
+		User user;
+
+		try{
+			user = factory.getUserDAO().getByGoogleID(userID);
+		} catch(Exception e) {
+			user = new User(userID, "", Utilities.generateCode(16), email);
+			factory.getUserDAO().save(user);
+		}
+
+		return user;
 	}
 
 	private Authtoken getToken(User user) {
