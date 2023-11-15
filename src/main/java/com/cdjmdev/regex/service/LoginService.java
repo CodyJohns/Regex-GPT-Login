@@ -1,6 +1,7 @@
 package com.cdjmdev.regex.service;
 
 import com.cdjmdev.oracle.dao.DAOFactory;
+import com.cdjmdev.oracle.exception.CredentialsIncorrectException;
 import com.cdjmdev.oracle.model.Authtoken;
 import com.cdjmdev.oracle.model.User;
 import com.cdjmdev.oracle.util.Utilities;
@@ -23,7 +24,7 @@ public class LoginService {
 		this.factory = factory;
 	}
 
-	public LoginController.LoginResult login(LoginController.LoginRequest request) {
+	public LoginController.LoginResult login(LoginController.LoginRequest request) throws CredentialsIncorrectException {
 		if(request.google_cred != null)
 			return googleLogin(request.google_cred);
 		else
@@ -83,14 +84,14 @@ public class LoginService {
 		return result;
 	}
 
-	private LoginController.LoginResult conventionalLogin(String id, String password) {
+	private LoginController.LoginResult conventionalLogin(String id, String password) throws CredentialsIncorrectException {
 
 		User user = factory.getUserDAO().getByEmail(id);
 
 		boolean match = user.password.compare(password);
 
 		if(!match)
-			throw new RuntimeException("Credentials Incorrect");
+			throw new CredentialsIncorrectException("Credentials Incorrect");
 
 		Authtoken token;
 
