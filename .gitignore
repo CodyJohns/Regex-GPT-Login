@@ -1,4 +1,5 @@
 /src/libraries/RegexGPT-DB.jar
 /.idea/
 /target/
+src/main/java/com/cdjmdev/oracle/
 src/main/java/com/cdjmdev/oracle/database/Key.java

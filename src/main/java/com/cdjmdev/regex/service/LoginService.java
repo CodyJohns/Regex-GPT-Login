@@ -31,10 +31,9 @@ public class LoginService {
 			return conventionalLogin(request.id, request.password);
 	}
 
-	//TODO: Refactor these two methods into their own classes
-
 	private LoginController.LoginResult googleLogin(String credential) {
 
+		//TODO: Move this to a singleton for testing
 		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
 			.setAudience(Collections.singletonList(CLIENT_ID))
 			.build();
