@@ -3,12 +3,17 @@ package com.cdjmdev.regex;
 import com.cdjmdev.oracle.dao.DAOFactory;
 import com.cdjmdev.oracle.dao.OracleDAOFactory;
 import com.cdjmdev.oracle.exception.CredentialsIncorrectException;
-import com.cdjmdev.regex.service.LoginService;
+import com.cdjmdev.regex.service.ConventionalLogin;
+import com.cdjmdev.regex.service.LoginStrategy;
+import com.cdjmdev.regex.service.ThirdPartyLogin;
+import com.cdjmdev.regex.verifier.AppleVerifier;
+import com.cdjmdev.regex.verifier.GoogleVerifier;
 
 public class LoginController {
 
     public static class LoginRequest {
         public String google_cred;
+        public String apple_cred;
         public String id;
         public String password;
     }
@@ -20,11 +25,9 @@ public class LoginController {
     }
 
     private DAOFactory factory;
-    private LoginService service;
 
     public LoginController() {
         factory = new OracleDAOFactory();
-        service = new LoginService(factory);
     }
 
     public LoginResult handleRequest(LoginRequest request) {
@@ -32,7 +35,7 @@ public class LoginController {
         LoginResult result;
 
         try {
-            result = service.login(request);
+            result = getLoginService(request).login();
         } catch (NullPointerException e) {
             result = new LoginResult();
             result.status = 404;
@@ -48,6 +51,15 @@ public class LoginController {
         }
 
         return result;
+    }
+
+    private LoginStrategy getLoginService(LoginRequest request) {
+        if(request.apple_cred != null)
+            return new ThirdPartyLogin(factory, request, new AppleVerifier());
+        else if(request.google_cred != null)
+            return new ThirdPartyLogin(factory, request, new GoogleVerifier());
+        else
+            return new ConventionalLogin(factory, request);
     }
 
 }
