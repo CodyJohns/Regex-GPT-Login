@@ -56,7 +56,7 @@ public abstract class ThirdPartyLogin implements LoginStrategy {
             token.expires = Utilities.getFutureTimestamp();
 
             factory.getAuthtokenDAO().save(token);
-        } catch(Exception e) {
+        } catch(NullPointerException e) {
             token = factory.getAuthtokenDAO().createNew(user);
         }
 

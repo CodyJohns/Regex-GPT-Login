@@ -18,7 +18,7 @@ public class AppleLogin extends ThirdPartyLogin {
 
         try{
             user = factory.getUserDAO().getByAppleID(userID);
-        } catch(Exception e) {
+        } catch(NullPointerException e) {
             user = new User(userID, "", Utilities.generateCode(16), email);
             factory.getUserDAO().save(user);
         }
