@@ -3,9 +3,7 @@ package com.cdjmdev.regex;
 import com.cdjmdev.oracle.dao.DAOFactory;
 import com.cdjmdev.oracle.dao.OracleDAOFactory;
 import com.cdjmdev.oracle.exception.CredentialsIncorrectException;
-import com.cdjmdev.regex.service.ConventionalLogin;
-import com.cdjmdev.regex.service.LoginStrategy;
-import com.cdjmdev.regex.service.ThirdPartyLogin;
+import com.cdjmdev.regex.service.*;
 import com.cdjmdev.regex.verifier.AppleVerifier;
 import com.cdjmdev.regex.verifier.GoogleVerifier;
 
@@ -55,9 +53,9 @@ public class LoginController {
 
     private LoginStrategy getLoginService(LoginRequest request) {
         if(request.apple_cred != null)
-            return new ThirdPartyLogin(factory, request, new AppleVerifier());
+            return new AppleLogin(factory, request, new AppleVerifier());
         else if(request.google_cred != null)
-            return new ThirdPartyLogin(factory, request, new GoogleVerifier());
+            return new GoogleLogin(factory, request, new GoogleVerifier());
         else
             return new ConventionalLogin(factory, request);
     }

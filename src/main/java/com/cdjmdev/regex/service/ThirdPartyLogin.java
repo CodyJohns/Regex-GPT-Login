@@ -9,9 +9,9 @@ import com.cdjmdev.regex.LoginController;
 import com.cdjmdev.regex.verifier.Verifier;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 
-public class ThirdPartyLogin implements LoginStrategy {
+public abstract class ThirdPartyLogin implements LoginStrategy {
 
-    private DAOFactory factory;
+    protected DAOFactory factory;
     private LoginController.LoginRequest request;
     private Verifier<GoogleIdToken> verifier;
 
@@ -44,18 +44,7 @@ public class ThirdPartyLogin implements LoginStrategy {
         return result;
     }
 
-    private User getUser(String userID, String email) {
-        User user;
-
-        try{
-            user = factory.getUserDAO().getByGoogleID(userID);
-        } catch(Exception e) {
-            user = new User(userID, "", Utilities.generateCode(16), email);
-            factory.getUserDAO().save(user);
-        }
-
-        return user;
-    }
+    protected abstract User getUser(String userID, String email);
 
     private Authtoken getToken(User user) {
         Authtoken token;

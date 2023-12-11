@@ -8,15 +8,14 @@ import com.cdjmdev.oracle.model.Authtoken;
 import com.cdjmdev.oracle.model.User;
 import com.cdjmdev.oracle.util.Utilities;
 import com.cdjmdev.regex.service.ConventionalLogin;
+import com.cdjmdev.regex.service.GoogleLogin;
 import com.cdjmdev.regex.service.LoginStrategy;
-import com.cdjmdev.regex.service.ThirdPartyLogin;
 import com.cdjmdev.regex.verifier.Verifier;
 import com.fnproject.fn.testing.*;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.gson.Gson;
 import org.junit.Rule;
 import org.junit.jupiter.api.*;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -120,7 +119,7 @@ public class LoginControllerTest {
 
         request.google_cred = "1234567890";
 
-        LoginStrategy service = new ThirdPartyLogin(dFactory, request, vMock);
+        LoginStrategy service = new GoogleLogin(dFactory, request, vMock);
 
         assertDoesNotThrow(service::login);
     }
@@ -132,7 +131,7 @@ public class LoginControllerTest {
 
         request.google_cred = "0987654321";
 
-        LoginStrategy service = new ThirdPartyLogin(dFactory, request, vMock);
+        LoginStrategy service = new GoogleLogin(dFactory, request, vMock);
 
         assertThrows(CredentialsIncorrectException.class, service::login);
     }
