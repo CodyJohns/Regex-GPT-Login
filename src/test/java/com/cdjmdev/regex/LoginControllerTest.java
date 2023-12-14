@@ -112,6 +112,22 @@ public class LoginControllerTest {
     }
 
     @Test
+    @DisplayName("Conventional login with blank credentials")
+    void testLoginBlankCreds() {
+
+        LoginController.LoginRequest request = new LoginController.LoginRequest();
+
+        LoginStrategy service = new ConventionalLogin(dFactory, request);
+
+        assertThrows(IllegalArgumentException.class, service::login);
+
+        request.id = "";
+        request.password = "";
+
+        assertThrows(IllegalArgumentException.class, service::login);
+    }
+
+    @Test
     @DisplayName("Google login with correct credential")
     void testGoogleLogin() {
 

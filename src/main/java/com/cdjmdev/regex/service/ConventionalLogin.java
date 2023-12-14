@@ -19,6 +19,10 @@ public class ConventionalLogin implements LoginStrategy {
 
     @Override
     public LoginController.LoginResult login() throws CredentialsIncorrectException {
+
+        if(request.id == null || request.id.isBlank() || request.password == null || request.password.isBlank())
+            throw new IllegalArgumentException("Fields are blank.");
+
         User user = factory.getUserDAO().getByEmail(request.id);
 
         boolean match = user.password.compare(request.password);
